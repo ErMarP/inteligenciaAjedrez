@@ -117,6 +117,10 @@ public class Main extends PApplet{
 
 	@Override
 	public void mouseClicked(MouseEvent event){
+		if(mouseX >	 60 && mouseY > 0 && mouseX < 235 && mouseY < 75){
+			Tablero tab = Tablero.obtenerInstancia();
+		}
+
 		if(mouseX >	 60 && mouseY > 100 && mouseX < 135 && mouseY < 175){
 			nueva = new Rey(Color.BLANCO, cero);
 		}
@@ -165,13 +169,26 @@ public class Main extends PApplet{
 			nueva = new Peon(Color.NEGRO, cero);
 		}
 
+		if(mouseX >	 60 && mouseY > 700 && mouseX < 135 && mouseY < 775){
+			nueva = null;
+		}
+
+		if(mouseX >	 160 && mouseY > 700 && mouseX < 235 && mouseY < 775){
+			for (int i = 0; i < 8; i ++){
+				for (int j = 3; j < 11; j ++){
+					try{
+						tablero.asignarPieza(null, i, j);
+					}catch(Exception e){}
+				}
+			}
+		}
+
 		int fila = event.getY() / 100;
     	int columna = event.getX() / 100;
 		try{
 			tablero.asignarPieza(null, fila, columna);
 			tablero.asignarPieza(nueva, fila, columna);
-		}catch(Exception e){
-		}
+		}catch(Exception e){}
 		redraw();
 	}
 }
