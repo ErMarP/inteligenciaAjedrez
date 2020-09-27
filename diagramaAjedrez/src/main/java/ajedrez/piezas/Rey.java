@@ -59,4 +59,8 @@ public class Rey extends Pieza {
             }
             return jugadas;
     }
+    
+    public Pieza copia(){
+        return new Rey(this.obtenerColor(), this.obtenerPosicion());
+    }
 }

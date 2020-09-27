@@ -38,6 +38,10 @@ public class Torre extends Pieza {
         return jugadas;
     }
 
+    public Pieza copia(){
+        return new Torre(this.obtenerColor(), this.obtenerPosicion());
+    }
+
     private boolean f(int i, int j, List<Posicion> lista) {
         Tablero tablero = Tablero.obtenerInstancia();
         if (tablero.obtenerPieza(i, j) == null || obtenerColor() != tablero.obtenerPieza(i, j).obtenerColor()) {

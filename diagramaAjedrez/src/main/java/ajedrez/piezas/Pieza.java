@@ -16,6 +16,8 @@ public abstract class Pieza implements Serializable{
     
     public abstract List<Posicion> obtenerJugadasLegales();
 
+    public abstract Pieza copia();
+
     public boolean esJugadaLegal(int fila, int columna) {
         return obtenerJugadasLegales().
                 contains(new Posicion(fila, columna));

@@ -1,10 +1,14 @@
 package app;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import javax.swing.JFileChooser;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.event.MouseEvent;
@@ -103,6 +107,21 @@ public class Main extends PApplet{
 			}
 		}
 
+		fill(200, 100);
+		for (int i = 150; i < 600; i += 100){
+			rect(1150, i, 200, 70);
+		}
+
+		fill(200, 100);
+		rect(60, 700, 75, 75);
+		rect(160, 700, 75, 75);
+
+		textSize(17);
+		fill(0);
+		text("BORRAR", 62, 743);
+		text("REINICIO", 160, 743);
+		text("GUARDAR POSICIÓN", 1165, 190);
+
 		for (int i = 100; i < 700; i += 100){
 			for (int j = 0; j < 2; j ++){
 				if(j == 0){
@@ -127,15 +146,6 @@ public class Main extends PApplet{
 			fill(100, 100);
 			rect(60, 700, 75, 75);
 		}
-
-		fill(200, 100);
-		rect(60, 700, 75, 75);
-		rect(160, 700, 75, 75);
-
-		textSize(17);
-		fill(0);
-		text("BORRAR", 62, 743);
-		text("REINICIO", 160, 743);
 
 		for (int i = 0; i < 8; i++) {
 			for (int j = 3; j < 11; j++) {
@@ -229,12 +239,127 @@ public class Main extends PApplet{
 			}
 		}
 
-		int fila = event.getY() / 100;
-    	int columna = event.getX() / 100;
-		try{
-			tablero.asignarPieza(null, fila, columna);
-			tablero.asignarPieza(nueva, fila, columna);
-		}catch(Exception e){}
+		if(mouseX > 1150 && mouseY > 150 && mouseX < 1270 && mouseY < 300){
+			JFileChooser guardar = new JFileChooser();
+			guardar.showSaveDialog(null);
+			guardar.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+			File archivo = guardar.getSelectedFile();
+    		try {
+				FileWriter escribir = new FileWriter(archivo, true);
+				escribir.write("!\"\"\"\"\"\"\"\"#\n");
+				for (int i = 0; i < 8; i ++){
+					escribir.write("$");
+					for (int j = 3; j < 11; j ++){
+						escribir.write(identificador(tablero.obtenerPieza(i, j)));
+						if(j == 10)
+							escribir.write("%");
+					}
+					escribir.write("\n");
+				}
+				escribir.write("/(((((((()");
+        		escribir.close();
+    		} catch (IOException ex) {
+        		System.out.println("Error al guardar, en la salida");
+    		}
+		}
+
+		if(mouseX > 300 && mouseY > 0 && mouseX < 1100 && mouseY < 800){
+			int fila = event.getY() / 100;
+    		int columna = event.getX() / 100;
+			try{
+				tablero.asignarPieza(nueva.copia(), fila, columna);
+			}catch(Exception e){}
+		}
 		redraw();
 	}
+
+	public String identificador(Pieza pieza){
+		String id = "";
+		if((pieza.obtenerPosicion().obtenerColumna() + pieza.obtenerPosicion().obtenerFila()) % 2 == 0){
+			if(pieza.obtenerColor() == Color.BLANCO){
+				if(pieza instanceof Rey){
+					id += "k";
+				}
+				if(pieza instanceof Dama){
+					id += "q";
+				}
+				if(pieza instanceof Torre){
+					id += "r";
+				}
+				if(pieza instanceof Alfil){
+					id += "b";
+				}
+				if(pieza instanceof Caballo){
+					id += "n";
+				}
+				if(pieza instanceof Peon){
+					id += "p";
+				}
+			}else{
+				if(pieza instanceof Rey){
+					id += "l";
+				}
+				if(pieza instanceof Dama){
+					id += "w";
+				}
+				if(pieza instanceof Torre){
+					id += "t";
+				}
+				if(pieza instanceof Alfil){
+					id += "v";
+				}
+				if(pieza instanceof Caballo){
+					id += "m";
+				}
+				if(pieza instanceof Peon){
+					id += "o";
+				}
+			}
+		}else{
+			if(pieza.obtenerColor() == Color.BLANCO){
+				if(pieza instanceof Rey){
+					id += "K";
+				}
+				if(pieza instanceof Dama){
+					id += "Q";
+				}
+				if(pieza instanceof Torre){
+					id += "R";
+				}
+				if(pieza instanceof Alfil){
+					id += "B";
+				}
+				if(pieza instanceof Caballo){
+					id += "N";
+				}
+				if(pieza instanceof Peon){
+					id += "P";
+				}
+			}else{
+				if(pieza instanceof Rey){
+					id += "L";
+				}
+				if(pieza instanceof Dama){
+					id += "W";
+				}
+				if(pieza instanceof Torre){
+					id += "T";
+				}
+				if(pieza instanceof Alfil){
+					id += "V";
+				}
+				if(pieza instanceof Caballo){
+					id += "M";
+				}
+				if(pieza instanceof Peon){
+					id += "O";
+				}
+			}
+		}
+		return id;
+	}
+
+	/*public boolean colorCasilla(Posicion pos){
+		return ((pos.obtenerColumna() + pos.obtenerFila()) % 2 == 0 ? true : false);
+	}*/
 }

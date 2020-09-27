@@ -62,4 +62,8 @@ public class Peon extends Pieza {
         return jugadas;
     }
 
+    public Pieza copia(){
+        return new Peon(this.obtenerColor(), this.obtenerPosicion());
+    }
+
 }

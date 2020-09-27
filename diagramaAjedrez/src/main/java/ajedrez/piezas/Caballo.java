@@ -41,6 +41,10 @@ public class Caballo extends Pieza {
         }
         return jugadas;
     }
+
+    public Pieza copia(){
+        return new Caballo(this.obtenerColor(), this.obtenerPosicion());
+    }
     
     private boolean f(int i, int j, List<Posicion> lista) {
         Tablero tablero = Tablero.obtenerInstancia();
