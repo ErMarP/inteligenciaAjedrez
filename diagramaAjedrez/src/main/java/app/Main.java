@@ -91,6 +91,52 @@ public class Main extends PApplet{
 		image(loadImage(getClass().getResource("/Cnb.jpg").getPath()), 160, 500, 75, 75);
 		image(loadImage(getClass().getResource("/Pbb.jpg").getPath()), 60, 600, 75, 75);
 		image(loadImage(getClass().getResource("/Pnb.jpg").getPath()), 160, 600, 75, 75);
+
+		fill(150, 100);
+		for (int i = 100; i < 700; i += 100){
+			for (int j = 0; j < 2; j ++){
+				if(j == 0){
+					rect(60, i, 75, 75);
+				 }else{
+					rect(160, i, 75, 75);
+				 }
+			}
+		}
+
+		for (int i = 100; i < 700; i += 100){
+			for (int j = 0; j < 2; j ++){
+				if(j == 0){
+					if(mouseX >	 60 && mouseY > i && mouseX < 135 && mouseY < i + 75){
+						fill(0, 100);
+						rect(60, i, 75, 75);
+					}
+				 }else{
+					if(mouseX >	 160 && mouseY > i && mouseX < 235 && mouseY < i + 75){
+						fill(0, 100);
+						rect(160, i, 75, 75);
+					}
+				 }
+			}
+		}
+
+		if(mouseX >	 160 && mouseY > 700 && mouseX < 235 && mouseY < 775){
+			fill(100, 100);
+			rect(160, 700, 75, 75);
+		}
+		if(mouseX >	 60 && mouseY > 700 && mouseX < 135 && mouseY < 775){
+			fill(100, 100);
+			rect(60, 700, 75, 75);
+		}
+
+		fill(200, 100);
+		rect(60, 700, 75, 75);
+		rect(160, 700, 75, 75);
+
+		textSize(17);
+		fill(0);
+		text("BORRAR", 62, 743);
+		text("REINICIO", 160, 743);
+
 		for (int i = 0; i < 8; i++) {
 			for (int j = 3; j < 11; j++) {
 				if ((i + j) % 2 == 0) {
@@ -118,7 +164,7 @@ public class Main extends PApplet{
 	@Override
 	public void mouseClicked(MouseEvent event){
 		if(mouseX >	 60 && mouseY > 0 && mouseX < 235 && mouseY < 75){
-			Tablero tab = Tablero.obtenerInstancia();
+			
 		}
 
 		if(mouseX >	 60 && mouseY > 100 && mouseX < 135 && mouseY < 175){
