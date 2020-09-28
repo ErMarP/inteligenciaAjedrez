@@ -1,5 +1,6 @@
 package app;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -121,6 +122,7 @@ public class Main extends PApplet{
 		text("BORRAR", 62, 743);
 		text("REINICIO", 160, 743);
 		text("GUARDAR POSICIÓN", 1165, 190);
+		text("LEER POSICIÓN", 1180	, 290);
 
 		for (int i = 100; i < 700; i += 100){
 			for (int j = 0; j < 2; j ++){
@@ -137,6 +139,13 @@ public class Main extends PApplet{
 				 }
 			}
 		}
+		for (int i = 150; i < 600; i += 100){
+			if(mouseX >	 1150 && mouseY > i && mouseX < 1350 && mouseY < i + 70){
+				fill(100, 100);
+				rect(1150, i, 200, 70);
+			}
+		}
+
 
 		if(mouseX >	 160 && mouseY > 700 && mouseX < 235 && mouseY < 775){
 			fill(100, 100);
@@ -239,27 +248,57 @@ public class Main extends PApplet{
 			}
 		}
 
-		if(mouseX > 1150 && mouseY > 150 && mouseX < 1270 && mouseY < 300){
+		if(mouseX > 1150 && mouseY > 150 && mouseX < 1350 && mouseY < 220){
 			JFileChooser guardar = new JFileChooser();
 			guardar.showSaveDialog(null);
 			guardar.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-			File archivo = guardar.getSelectedFile();
     		try {
+				File archivo = guardar.getSelectedFile();
 				FileWriter escribir = new FileWriter(archivo, true);
 				escribir.write("!\"\"\"\"\"\"\"\"#\n");
 				for (int i = 0; i < 8; i ++){
 					escribir.write("$");
 					for (int j = 3; j < 11; j ++){
-						escribir.write(identificador(tablero.obtenerPieza(i, j)));
+						Pieza letra = tablero.obtenerPieza(i, j);
+						if(letra == null){
+							escribir.write(((i+j) % 2 == 0) ? " " : "+");
+						}else{
+							escribir.write(identificador(letra));
+						}
 						if(j == 10)
 							escribir.write("%");
 					}
 					escribir.write("\n");
 				}
 				escribir.write("/(((((((()");
-        		escribir.close();
+				escribir.close();
+			} catch (NullPointerException ex) {
     		} catch (IOException ex) {
         		System.out.println("Error al guardar, en la salida");
+    		}
+		}
+
+		if(mouseX > 1150 && mouseY > 250 && mouseX < 1350 && mouseY < 320){
+			JFileChooser guardar = new JFileChooser();
+			guardar.showOpenDialog(null);
+			guardar.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+    		try {
+				File archivo = guardar.getSelectedFile();
+				FileReader fr = new FileReader(archivo);
+				BufferedReader lectura = new BufferedReader(fr);
+				lectura.readLine();
+				for (int i = 0; i < 8; i ++){
+					String linea = lectura.readLine().toLowerCase();
+					linea = linea.substring(1);
+					for (int j = 3; j < 11; j ++){
+						char letra = linea.charAt(j - 3);
+						tablero.asignarPieza(traductor(letra), i, j);
+					}
+				}
+				lectura.close();
+			} catch (NullPointerException ex) {
+    		} catch (IOException ex) {
+        		System.out.println("Error al leer");
     		}
 		}
 
@@ -267,6 +306,7 @@ public class Main extends PApplet{
 			int fila = event.getY() / 100;
     		int columna = event.getX() / 100;
 			try{
+				tablero.asignarPieza(null, fila, columna);
 				tablero.asignarPieza(nueva.copia(), fila, columna);
 			}catch(Exception e){}
 		}
@@ -359,7 +399,44 @@ public class Main extends PApplet{
 		return id;
 	}
 
-	/*public boolean colorCasilla(Posicion pos){
-		return ((pos.obtenerColumna() + pos.obtenerFila()) % 2 == 0 ? true : false);
-	}*/
+	public Pieza traductor(char id){
+		Pieza traducida = null;
+		if(id == 'k'){
+			traducida = new Rey(Color.BLANCO, cero); 
+		}
+		if(id == 'l'){
+			traducida = new Rey(Color.NEGRO, cero); 
+		}
+		if(id == 'q'){
+			traducida = new Dama(Color.BLANCO, cero); 
+		}
+		if(id == 'w'){
+			traducida = new Dama(Color.NEGRO, cero); 
+		}
+		if(id == 'r'){
+			traducida = new Torre(Color.BLANCO, cero); 
+		}
+		if(id == 't'){
+			traducida = new Torre(Color.NEGRO, cero); 
+		}
+		if(id == 'b'){
+			traducida = new Alfil(Color.BLANCO, cero); 
+		}
+		if(id == 'v'){
+			traducida = new Alfil(Color.NEGRO, cero); 
+		}
+		if(id == 'n'){
+			traducida = new Caballo(Color.BLANCO, cero); 
+		}
+		if(id == 'm'){
+			traducida = new Caballo(Color.NEGRO, cero); 
+		}
+		if(id == 'p'){
+			traducida = new Peon(Color.BLANCO, cero); 
+		}
+		if(id == 'o'){
+			traducida = new Peon(Color.NEGRO, cero); 
+		}
+		return traducida;
+	}
 }
