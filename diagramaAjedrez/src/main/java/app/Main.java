@@ -33,6 +33,7 @@ public class Main extends PApplet{
     private Pieza piezaSeleccionada;
 	private boolean seleccionandoJugada;
 	private boolean fin = false;
+	private boolean inicio = false;
 	private Pieza nueva;
 	private Posicion cero;
     
@@ -97,6 +98,7 @@ public class Main extends PApplet{
 		image(loadImage(getClass().getResource("/Pbb.jpg").getPath()), 60, 600, 75, 75);
 		image(loadImage(getClass().getResource("/Pnb.jpg").getPath()), 160, 600, 75, 75);
 
+		strokeWeight(6);
 		fill(150, 100);
 		for (int i = 100; i < 700; i += 100){
 			for (int j = 0; j < 2; j ++){
@@ -117,12 +119,24 @@ public class Main extends PApplet{
 		rect(60, 700, 75, 75);
 		rect(160, 700, 75, 75);
 
+		textSize(50);
+		fill(0xFFFFA500);
+		text("AJEDREZ", 39, 50);
+		text("CHESS", 1165, 50);
+
+		textSize(30);
+		fill(0xFFA52A2A);
+		text("PIEZAS", 97, 90);
+		text("OPCIONES", 1170, 130);
+
 		textSize(17);
 		fill(0);
 		text("BORRAR", 62, 743);
-		text("REINICIO", 160, 743);
+		text("NUEVO", 168, 743);
 		text("GUARDAR POSICIÓN", 1165, 190);
-		text("LEER POSICIÓN", 1180	, 290);
+		text("LEER POSICIÓN", 1187 , 290);
+		text("JUGAR PARTIDA", 1187 , 490);
+		text("PARAR PARTIDA", 1187 , 590);
 
 		for (int i = 100; i < 700; i += 100){
 			for (int j = 0; j < 2; j ++){
@@ -167,6 +181,7 @@ public class Main extends PApplet{
 				}
 			}
 		}
+
 		for (int i = 0; i < 8; i++) {
 			for (int j = 3; j < 11; j++) {	
 				Pieza pieza = tablero.obtenerPieza(i, j);
@@ -177,14 +192,28 @@ public class Main extends PApplet{
 				}
 			}
 		}
+
+		if (piezaSeleccionada != null) {
+			int fila = piezaSeleccionada.obtenerPosicion().obtenerFila(),
+				columna = piezaSeleccionada.obtenerPosicion().obtenerColumna();
+			stroke(0x08000ff00);
+			strokeWeight(3);					
+			for (Posicion pos: piezaSeleccionada.obtenerJugadasLegales()) {
+				fill((pos.obtenerFila() + pos.obtenerColumna()) % 2 == 0 ? 0x010000ff : 0x01000000);
+				rect(pos.obtenerColumna() * 100, pos.obtenerFila() * 100, 100, 100);	
+			}
+			stroke(0x400000ff);
+			strokeWeight(3);
+			fill((fila + columna) % 2 == 0 ? 0x010000ff : 0x01000000);
+			rect(columna * 100, fila * 100, 100, 100);
+			stroke(0);
+			strokeWeight(1);
+		}
 		
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent event){
-		if(mouseX >	 60 && mouseY > 0 && mouseX < 235 && mouseY < 75){
-			
-		}
 
 		if(mouseX >	 60 && mouseY > 100 && mouseX < 135 && mouseY < 175){
 			nueva = new Rey(Color.BLANCO, cero);
@@ -249,68 +278,127 @@ public class Main extends PApplet{
 		}
 
 		if(mouseX > 1150 && mouseY > 150 && mouseX < 1350 && mouseY < 220){
-			JFileChooser guardar = new JFileChooser();
-			guardar.showSaveDialog(null);
-			guardar.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-    		try {
-				File archivo = guardar.getSelectedFile();
-				FileWriter escribir = new FileWriter(archivo, true);
-				escribir.write("!\"\"\"\"\"\"\"\"#\n");
-				for (int i = 0; i < 8; i ++){
-					escribir.write("$");
-					for (int j = 3; j < 11; j ++){
-						Pieza letra = tablero.obtenerPieza(i, j);
-						if(letra == null){
-							escribir.write(((i+j) % 2 == 0) ? " " : "+");
-						}else{
-							escribir.write(identificador(letra));
-						}
-						if(j == 10)
-							escribir.write("%");
-					}
-					escribir.write("\n");
-				}
-				escribir.write("/(((((((()");
-				escribir.close();
-			} catch (NullPointerException ex) {
-    		} catch (IOException ex) {
-        		System.out.println("Error al guardar, en la salida");
-    		}
+			guardarPosicion();
 		}
 
 		if(mouseX > 1150 && mouseY > 250 && mouseX < 1350 && mouseY < 320){
-			JFileChooser guardar = new JFileChooser();
-			guardar.showOpenDialog(null);
-			guardar.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-    		try {
-				File archivo = guardar.getSelectedFile();
-				FileReader fr = new FileReader(archivo);
-				BufferedReader lectura = new BufferedReader(fr);
-				lectura.readLine();
-				for (int i = 0; i < 8; i ++){
-					String linea = lectura.readLine().toLowerCase();
-					linea = linea.substring(1);
-					for (int j = 3; j < 11; j ++){
-						char letra = linea.charAt(j - 3);
-						tablero.asignarPieza(traductor(letra), i, j);
-					}
-				}
-				lectura.close();
-			} catch (NullPointerException ex) {
-    		} catch (IOException ex) {
-        		System.out.println("Error al leer");
-    		}
+			lecturaPosicion();
 		}
+		
+		if(mouseX > 1150 && mouseY > 450 && mouseX < 1350 && mouseY < 520){
+			inicio = true;
+		}
+		
+		if(mouseX > 1150 && mouseY > 550 && mouseX < 1350 && mouseY < 620){
+			inicio = false;
+		}
+
+		
+		/*if(mouseX > 1150 && mouseY > 350 && mouseX < 1350 && mouseY < 420){
+			Rectangle capturar = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
+			// Creamos la imagen para dibujar en ella.
+			try{
+				BufferedImage imagen = new Robot().createScreenCapture(capturar);
+		
+			JFileChooser guardar = new JFileChooser();
+			guardar.showSaveDialog(null);
+			guardar.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+			File fichero = guardar.getSelectedFile();
+			String formato = "jpg";
+
+			/* Hacemos el dibujo
+			Graphics g = imagen.getGraphics();
+			g.drawImage(imagen2, 0, 0, this);
+			g.fillRect(0, 0, 50, 50);
+			g.fillOval(25, 25, 50, 50);
+	
+			// Escribimos la imagen en el archivo
+				ImageIO.write(imagen, formato, fichero);
+			} catch (IOException e) {
+				System.out.println("Error de escritura");
+			}catch (AWTException e1){
+			}
+		}*/
 
 		if(mouseX > 300 && mouseY > 0 && mouseX < 1100 && mouseY < 800){
 			int fila = event.getY() / 100;
-    		int columna = event.getX() / 100;
-			try{
-				tablero.asignarPieza(null, fila, columna);
-				tablero.asignarPieza(nueva.copia(), fila, columna);
-			}catch(Exception e){}
+    		int columna = event.getX() / 100;	
+			if(!inicio){
+				try{
+					tablero.asignarPieza(null, fila, columna);
+					tablero.asignarPieza(nueva.copia(), fila, columna);
+				}catch(Exception e){}
+			}
+
+			if(inicio){
+				if (seleccionandoJugada) {
+					tablero.moverPieza(piezaSeleccionada, fila, columna);
+					seleccionandoJugada = false;
+					piezaSeleccionada = null;
+				} else {
+					piezaSeleccionada = tablero.obtenerPieza(fila, columna);
+					if (piezaSeleccionada == null || tablero.obtenerTurno() != piezaSeleccionada.obtenerColor()) {
+						piezaSeleccionada = null;
+					}
+					seleccionandoJugada = piezaSeleccionada != null;
+				}
+			};
 		}
 		redraw();
+	}
+
+	public void guardarPosicion(){
+		JFileChooser guardar = new JFileChooser();
+		guardar.showSaveDialog(null);
+		guardar.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+    	try {
+			File archivo = guardar.getSelectedFile();
+			FileWriter escribir = new FileWriter(archivo, true);
+			escribir.write("!\"\"\"\"\"\"\"\"#\n");
+			for (int i = 0; i < 8; i ++){
+				escribir.write("$");
+				for (int j = 3; j < 11; j ++){
+					Pieza letra = tablero.obtenerPieza(i, j);
+					if(letra == null){
+						escribir.write(((i+j) % 2 == 0) ? " " : "+");
+					}else{
+						escribir.write(identificador(letra));
+					}
+					if(j == 10)
+						escribir.write("%");
+				}
+				escribir.write("\n");
+			}
+			escribir.write("/(((((((()");
+			escribir.close();
+		} catch (NullPointerException ex) {
+		} catch (IOException ex) {
+    		System.out.println("Error al guardar, en la salida");
+		}
+	}
+
+	public void lecturaPosicion(){
+		JFileChooser leer = new JFileChooser();
+		leer.showOpenDialog(null);
+		leer.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+    	try {
+			File archivo = leer.getSelectedFile();
+			FileReader fr = new FileReader(archivo);
+			BufferedReader lectura = new BufferedReader(fr);
+			lectura.readLine();
+			for (int i = 0; i < 8; i ++){
+				String linea = lectura.readLine().toLowerCase();
+				linea = linea.substring(1);
+				for (int j = 3; j < 11; j ++){
+					char letra = linea.charAt(j - 3);
+					tablero.asignarPieza(traductor(letra), i, j);
+				}
+			}
+			lectura.close();
+		} catch (NullPointerException ex) {
+    	} catch (IOException ex) {
+    		System.out.println("Error al leer");
+		}
 	}
 
 	public String identificador(Pieza pieza){
