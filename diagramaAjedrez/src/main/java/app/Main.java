@@ -1,31 +1,30 @@
 package app;
 
+import java.util.HashMap;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import javax.swing.JFileChooser;
+import javax.imageio.ImageIO;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.event.MouseEvent;
-import java.util.HashMap;
 import ajedrez.Tablero;
-import ajedrez.piezas.Color;
-import ajedrez.piezas.Posicion;
-import ajedrez.piezas.Pieza;
-import ajedrez.piezas.Peon;
-import ajedrez.piezas.Dama;
-import ajedrez.piezas.Alfil;
-import ajedrez.piezas.Rey;
-import ajedrez.piezas.Torre;
+import ajedrez.piezas.*;
 import jdk.jfr.Event;
-import ajedrez.piezas.Caballo;
 
+/**
+ * Clase App que genera la interfaz gráfica y modela el comportamiento
+ * de la aplicacion de ajedrez.
+ * 
+ * @author Erick Martinez Piza
+ * @version 1.0
+ */
 public class Main extends PApplet{
 
     private Tablero tablero;
@@ -36,7 +35,12 @@ public class Main extends PApplet{
 	private boolean inicio = false;
 	private Pieza nueva;
 	private Posicion cero;
-    
+	
+	/**
+     * Metodo main que corre la Aplicacion
+     * 
+     * @param args -- argumentos(no se toman en cuenta.)
+     */
     public static void main(String[] args) {
         PApplet.main("app.Main");
     }
@@ -48,11 +52,6 @@ public class Main extends PApplet{
 	
 	@Override
     public void setup() {
-		try (var in = new ObjectInputStream(new FileInputStream("juego"))) {
-			tablero = (Tablero) in.readObject();
-		} catch (IOException | ClassNotFoundException e) {
-			tablero = Tablero.obtenerInstancia();
-		}
 		tablero = Tablero.obtenerInstancia();
 		cero = new Posicion(0, 3);
         imagenes = new HashMap<>();
@@ -80,11 +79,11 @@ public class Main extends PApplet{
         imagenes.put("TorreNEGRO1", loadImage(getClass().getResource("/Tnb.jpg").getPath()));
         imagenes.put("TorreBLANCO2", loadImage(getClass().getResource("/Tbn.jpg").getPath()));
         imagenes.put("TorreNEGRO2", loadImage(getClass().getResource("/Tnn.jpg").getPath()));
-		background(0xCCCCCC);
     }
 
     @Override
 	public void draw() {
+		background(0xCCCCCC);
 		image(loadImage(getClass().getResource("/Rbb.jpg").getPath()), 60, 100, 75, 75);
 		image(loadImage(getClass().getResource("/Rnb.jpg").getPath()), 160, 100, 75, 75);
 		image(loadImage(getClass().getResource("/Dbb.jpg").getPath()), 60, 200, 75, 75);
@@ -135,10 +134,11 @@ public class Main extends PApplet{
 		text("NUEVO", 168, 743);
 		text("GUARDAR POSICIÓN", 1165, 190);
 		text("LEER POSICIÓN", 1187 , 290);
+		text("CAPTURAR POSICIÓN", 1163 , 390);
 		text("JUGAR PARTIDA", 1187 , 490);
 		text("PARAR PARTIDA", 1187 , 590);
 
-		for (int i = 100; i < 700; i += 100){
+		for (int i = 100; i < 800; i += 100){
 			for (int j = 0; j < 2; j ++){
 				if(j == 0){
 					if(mouseX >	 60 && mouseY > i && mouseX < 135 && mouseY < i + 75){
@@ -158,16 +158,6 @@ public class Main extends PApplet{
 				fill(100, 100);
 				rect(1150, i, 200, 70);
 			}
-		}
-
-
-		if(mouseX >	 160 && mouseY > 700 && mouseX < 235 && mouseY < 775){
-			fill(100, 100);
-			rect(160, 700, 75, 75);
-		}
-		if(mouseX >	 60 && mouseY > 700 && mouseX < 135 && mouseY < 775){
-			fill(100, 100);
-			rect(60, 700, 75, 75);
 		}
 
 		for (int i = 0; i < 8; i++) {
@@ -196,20 +186,19 @@ public class Main extends PApplet{
 		if (piezaSeleccionada != null) {
 			int fila = piezaSeleccionada.obtenerPosicion().obtenerFila(),
 				columna = piezaSeleccionada.obtenerPosicion().obtenerColumna();
-			stroke(0x08000ff00);
-			strokeWeight(3);					
+			stroke(0xffAD329F);
+			strokeWeight(0);					
 			for (Posicion pos: piezaSeleccionada.obtenerJugadasLegales()) {
-				fill((pos.obtenerFila() + pos.obtenerColumna()) % 2 == 0 ? 0x010000ff : 0x01000000);
-				rect(pos.obtenerColumna() * 100, pos.obtenerFila() * 100, 100, 100);	
+				fill((pos.obtenerFila() + pos.obtenerColumna()) % 2 == 0 ? 0x60FF0000 : 0x60FF0000);
+				circle((pos.obtenerColumna() * 100) + 50, (pos.obtenerFila() * 100) + 50, 45);	
 			}
-			stroke(0x400000ff);
-			strokeWeight(3);
+			stroke(0xff0000FF);
+			strokeWeight(6);
 			fill((fila + columna) % 2 == 0 ? 0x010000ff : 0x01000000);
 			rect(columna * 100, fila * 100, 100, 100);
 			stroke(0);
 			strokeWeight(1);
 		}
-		
 	}
 
 	@Override
@@ -294,31 +283,24 @@ public class Main extends PApplet{
 		}
 
 		
-		/*if(mouseX > 1150 && mouseY > 350 && mouseX < 1350 && mouseY < 420){
-			Rectangle capturar = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
-			// Creamos la imagen para dibujar en ella.
-			try{
-				BufferedImage imagen = new Robot().createScreenCapture(capturar);
-		
+		if(mouseX > 1150 && mouseY > 350 && mouseX < 1350 && mouseY < 420){
 			JFileChooser guardar = new JFileChooser();
 			guardar.showSaveDialog(null);
 			guardar.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-			File fichero = guardar.getSelectedFile();
-			String formato = "jpg";
-
-			/* Hacemos el dibujo
-			Graphics g = imagen.getGraphics();
-			g.drawImage(imagen2, 0, 0, this);
-			g.fillRect(0, 0, 50, 50);
-			g.fillOval(25, 25, 50, 50);
-	
-			// Escribimos la imagen en el archivo
-				ImageIO.write(imagen, formato, fichero);
-			} catch (IOException e) {
-				System.out.println("Error de escritura");
-			}catch (AWTException e1){
-			}
-		}*/
+			//PImage captura = get(400, 0, 100, 100);
+			PImage captura2 = get(300, 0, 800, 800);
+			Image buena2 = captura2.getImage();	
+			//Image buena = captura.getImage();	
+			try {
+				File archivo = new File(guardar.getSelectedFile().getAbsolutePath());
+				BufferedImage imagen = new BufferedImage(800, 800,BufferedImage.TYPE_INT_RGB);
+				Graphics lienzo = imagen.getGraphics();
+				//lienzo.drawImage(buena, 0, 0, null);
+				lienzo.drawImage(buena2, 0, 0, null);
+				//save(guardar.getSelectedFile().getAbsolutePath() + ".png");
+				ImageIO.write(imagen, "jpg", archivo);
+			} catch (IOException e) {}
+		}
 
 		if(mouseX > 300 && mouseY > 0 && mouseX < 1100 && mouseY < 800){
 			int fila = event.getY() / 100;
@@ -342,7 +324,7 @@ public class Main extends PApplet{
 					}
 					seleccionandoJugada = piezaSeleccionada != null;
 				}
-			};
+			}
 		}
 		redraw();
 	}
