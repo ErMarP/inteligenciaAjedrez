@@ -1,6 +1,5 @@
 package ajedrez;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.LinkedList;
 import ajedrez.piezas.Color;
@@ -13,23 +12,50 @@ import ajedrez.piezas.Rey;
 import ajedrez.piezas.Alfil;
 import ajedrez.piezas.Caballo;
 
-public class Tablero implements Serializable {
-    
-    private static final long serialVersionUID = 1L;
+/**
+ * Clase Tablero que modela el comportamiento de un 
+ * Tablero
+ * 
+ * @author Erick Martinez Piza
+ * @version 1.0
+ */
+public class Tablero{
 
-    private class Casilla implements Serializable {
+    /**
+     * Clase Casilla que modela el comportamiento de cada
+     * Casilla del Tablero 
+     * 
+     * @author Erick Martinez Piza
+     * @version 1.0
+     */
+    private class Casilla{
 
-        private static final long serialVersionUID = 1L;
         private Pieza pieza;
 
+        /**
+         * Metodo que devuelve la Pieza de la Casilla
+         * 
+         * @return Pieza -- Pieza en la casilla 
+         */
         public Pieza obtenerPieza() {
             return pieza;
         }
 
+        /**
+         * Metodo que asigna una Pieza a una Casilla
+         * 
+         * @param pieza -- la pieza que se va a asignar
+         */
         public void asignarPieza(Pieza pieza) {
             this.pieza = pieza;
         }
 
+        /**
+         * Metodo que verifica si la Casilla no tiene 
+         * ninguna Pieza
+         * 
+         * @return boolean -- True si no hay Pieza en la Casilla
+         */
         public boolean esVacio() {
             return pieza == null;
         }
@@ -41,16 +67,15 @@ public class Tablero implements Serializable {
     private Casilla[][] casillas;
     private List<Pieza> piezasBlancasVivas;
     private List<Pieza> piezasNegrasVivas;
-    private List<Pieza> piezasBlancasMuertas;
-    private List<Pieza> piezasNegrasMuertas;
     private Color turno;
 
+    /**
+     * Constructor por omision de un Tablero de ajedrez 
+     */
     private Tablero() {
         casillas = new Casilla[8][11];
         piezasBlancasVivas = new java.util.LinkedList<>();
         piezasNegrasVivas = new java.util.LinkedList<>();
-        piezasBlancasMuertas = new java.util.LinkedList<>();
-        piezasNegrasMuertas = new java.util.LinkedList<>();
         turno = Color.BLANCO;
         for (int i = 0; i < 8; i++) {
             for (int j = 3; j < 11; j++) {
@@ -62,7 +87,7 @@ public class Tablero implements Serializable {
                 Pieza pieza = null;
                 if (i == 1 || i == 6) {
                     pieza = new Peon(color, posicion);
-                }                                       // switch
+                }                                       
                 if (i == 0 && j == 6) {
                     pieza = new Dama(color, posicion);
                 }
@@ -100,18 +125,44 @@ public class Tablero implements Serializable {
         }
     }
 
+    /**
+     * Metodo que devuelve una instancia de un Tablero
+     * 
+     * @return Tablero -- el Tablero inicial
+     */
     public static Tablero obtenerInstancia() {
         return INSTANCIA;
     }
 
+    /**
+     * Metodo que obtiene la Pieza de una Casilla
+     * 
+     * @param i -- la fila de la Casilla
+     * @param j -- la columna de la Casilla
+     * 
+     * @return Pieza -- la Pieza en la Casilla dada, si no hay,
+     * regresa null
+     */
     public Pieza obtenerPieza(int i, int j) {
         return casillas[i][j].obtenerPieza();
     }
 
+    /**
+     * Metodo que obtiene el turno de la partida
+     * 
+     * @return Color -- el Color que tiene el turno siguiente
+     */
     public Color obtenerTurno() {
         return turno;
     }
 
+    /**
+     * Metodo que asigna una pieza en el Tablero
+     * 
+     * @param pieza -- la Pieza a la que se le asigna la Posicion en el Tablero
+     * @param fila -- la fila de la Casilla que se le va a asignar
+     * @param columna -- la columna de la Casilla que se le va a asignar
+     */
     public void asignarPieza(Pieza pieza, int fila, int columna) {
         if (pieza != null) {
             pieza.asignarPosicion(new Posicion(fila, columna));
@@ -119,6 +170,13 @@ public class Tablero implements Serializable {
         casillas[fila][columna].asignarPieza(pieza);
     }
 
+    /**
+     * Metodo para mover una Pieza en el Tablero y cambio de turno
+     * 
+     * @param pieza -- la Pieza que seva a mover
+     * @param fila -- la fila de la Casilla a la que la Pieza se va a mover
+     * @param columna -- la columna de la Casilla a la que la Pieza se va a mover
+     */
     public void moverPieza(Pieza pieza, int fila, int columna) {
         if (pieza == null
                 || (fila == pieza.obtenerPosicion().obtenerFila()    

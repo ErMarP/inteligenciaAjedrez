@@ -47,6 +47,9 @@ public class Main extends PApplet{
 
     @Override
     public void settings() {
+
+		//Espacio que determina el tamaño de la ventana del programa
+
 		size(1400, 800);
 	}
 	
@@ -83,7 +86,30 @@ public class Main extends PApplet{
 
     @Override
 	public void draw() {
-		background(0xCCCCCC);
+
+		//Espacio que especifica el color del fondo
+
+		background(0xff804800);
+
+		//Espacio que especifica el grosor de las lineas y el color de los cuadrados de los botones
+
+		strokeWeight(3);
+		fill(150, 100);
+
+		//Espacio donde se crean los cuadrados de los botones de las piezas
+
+		for (int i = 100; i < 700; i += 100){
+			for (int j = 0; j < 2; j ++){
+				if(j == 0){
+					rect(60, i, 75, 75);
+				 }else{
+					rect(160, i, 75, 75);
+				 }
+			}
+		}
+
+		//Espacio que carga las imagenes de las piezas en su respectivo boton
+
 		image(loadImage(getClass().getResource("/Rbb.jpg").getPath()), 60, 100, 75, 75);
 		image(loadImage(getClass().getResource("/Rnb.jpg").getPath()), 160, 100, 75, 75);
 		image(loadImage(getClass().getResource("/Dbb.jpg").getPath()), 60, 200, 75, 75);
@@ -97,26 +123,19 @@ public class Main extends PApplet{
 		image(loadImage(getClass().getResource("/Pbb.jpg").getPath()), 60, 600, 75, 75);
 		image(loadImage(getClass().getResource("/Pnb.jpg").getPath()), 160, 600, 75, 75);
 
-		strokeWeight(6);
-		fill(150, 100);
-		for (int i = 100; i < 700; i += 100){
-			for (int j = 0; j < 2; j ++){
-				if(j == 0){
-					rect(60, i, 75, 75);
-				 }else{
-					rect(160, i, 75, 75);
-				 }
-			}
-		}
+		//Espacio donde se crean los rectangulos de los botones de las opciones
 
-		fill(200, 100);
-		for (int i = 150; i < 600; i += 100){
+		fill(255);
+		for (int i = 150; i < 700; i += 100){
 			rect(1150, i, 200, 70);
 		}
 
-		fill(200, 100);
-		rect(60, 700, 75, 75);
-		rect(160, 700, 75, 75);
+		//Espacio donde se crea el rectangulo para el boton de "borrar"
+
+		fill(255);
+		rect(104, 700, 87, 75);
+
+		//Espacio donde se especifica el color, tamaño, ubicacion del texto que aparece en pantalla
 
 		textSize(50);
 		fill(0xFFFFA500);
@@ -124,41 +143,59 @@ public class Main extends PApplet{
 		text("CHESS", 1165, 50);
 
 		textSize(30);
-		fill(0xFFA52A2A);
+		fill(0xFFE3E4E5);
 		text("PIEZAS", 97, 90);
 		text("OPCIONES", 1170, 130);
 
 		textSize(17);
 		fill(0);
-		text("BORRAR", 62, 743);
-		text("NUEVO", 168, 743);
-		text("GUARDAR POSICIÓN", 1165, 190);
-		text("LEER POSICIÓN", 1187 , 290);
-		text("CAPTURAR POSICIÓN", 1163 , 390);
-		text("JUGAR PARTIDA", 1187 , 490);
-		text("PARAR PARTIDA", 1187 , 590);
+		text("BORRAR", 112, 743);
+		text("NUEVA POSICION", 1178, 190);
+		text("GUARDAR POSICIÓN", 1165, 290);
+		text("LEER POSICIÓN", 1187 , 390);
+		text("CAPTURAR POSICIÓN", 1163 , 490);
+		text("JUGAR PARTIDA", 1187 , 590);
+		text("PARAR PARTIDA", 1187 , 690);
 
-		for (int i = 100; i < 800; i += 100){
+		//Espacio donde se crea el efecto del boton de los cuadros de las piezas
+
+		for (int i = 100; i < 700; i += 100){
 			for (int j = 0; j < 2; j ++){
 				if(j == 0){
 					if(mouseX >	 60 && mouseY > i && mouseX < 135 && mouseY < i + 75){
+						strokeWeight(6);
 						fill(0, 100);
 						rect(60, i, 75, 75);
 					}
 				 }else{
 					if(mouseX >	 160 && mouseY > i && mouseX < 235 && mouseY < i + 75){
+						strokeWeight(6);
 						fill(0, 100);
 						rect(160, i, 75, 75);
 					}
 				 }
 			}
 		}
-		for (int i = 150; i < 600; i += 100){
+
+		//Espacio donde se crea el efecto del boton del boton de "borrar"
+
+		if(mouseX >	 104 && mouseY > 700 && mouseX < 191 && mouseY < 775){
+			strokeWeight(6);
+			fill(0, 100);
+			rect(104, 700, 87, 75);
+		}
+
+		//Espacio donde se crea el efecto del boton de las opciones
+		
+		for (int i = 150; i < 700; i += 100){
 			if(mouseX >	 1150 && mouseY > i && mouseX < 1350 && mouseY < i + 70){
+				strokeWeight(6);
 				fill(100, 100);
 				rect(1150, i, 200, 70);
 			}
 		}
+
+		//Espacio donde se insertan las imagenes de las casillas blancas y negreas del tablero
 
 		for (int i = 0; i < 8; i++) {
 			for (int j = 3; j < 11; j++) {
@@ -172,6 +209,9 @@ public class Main extends PApplet{
 			}
 		}
 
+		//Espacio donde se insertan las imagenes de las piezas donde les 
+		//correponde en el tablero dependiendo de la forma en que se usa el programa
+
 		for (int i = 0; i < 8; i++) {
 			for (int j = 3; j < 11; j++) {	
 				Pieza pieza = tablero.obtenerPieza(i, j);
@@ -182,6 +222,9 @@ public class Main extends PApplet{
 				}
 			}
 		}
+
+		//Espacio donde se especifica como se marcan las jugadas legales de una pieza en el tablero y que pieza esta seleccionada
+		//unicamente ocurre cuando se empieza la partida
 
 		if (piezaSeleccionada != null) {
 			int fila = piezaSeleccionada.obtenerPosicion().obtenerFila(),
@@ -204,59 +247,87 @@ public class Main extends PApplet{
 	@Override
 	public void mouseClicked(MouseEvent event){
 
+		//Zona que permite insertar un rey blanco en el Tablero
+
 		if(mouseX >	 60 && mouseY > 100 && mouseX < 135 && mouseY < 175){
 			nueva = new Rey(Color.BLANCO, cero);
 		}
+
+		//Zona que permite insertar un rey negro en el Tablero
 
 		if(mouseX >	 160 && mouseY > 100 && mouseX < 235 && mouseY < 175){
 			nueva = new Rey(Color.NEGRO, cero);
 		}
 
+		//Zona que permite insertar una dama blanca en el Tablero
+
 		if(mouseX >	 60 && mouseY > 200 && mouseX < 135 && mouseY < 275){
 			nueva = new Dama(Color.BLANCO, cero);
 		}
+
+		//Zona que permite insertar una dama negra en el Tablero
 
 		if(mouseX >	 160 && mouseY > 200 && mouseX < 235 && mouseY < 275){
 			nueva = new Dama(Color.NEGRO, cero);
 		}
 
+		//Zona que permite insertar una torre blanca en el Tablero
+
 		if(mouseX >	 60 && mouseY > 300 && mouseX < 135 && mouseY < 375){
 			nueva = new Torre(Color.BLANCO, cero);
 		}
+
+		//Zona que permite insertar una torre negra en el Tablero
 
 		if(mouseX >	 160 && mouseY > 300 && mouseX < 235 && mouseY < 375){
 			nueva = new Torre(Color.NEGRO, cero);
 		}
 
+		//Zona que permite insertar un alfil blanco en el Tablero
+
 		if(mouseX >	 60 && mouseY > 400 && mouseX < 135 && mouseY < 475){
 			nueva = new Alfil(Color.BLANCO, cero);
 		}
+
+		//Zona que permite insertar un alfil negro en el Tablero
 
 		if(mouseX >	 160 && mouseY > 400 && mouseX < 235 && mouseY < 475){
 			nueva = new Alfil(Color.NEGRO, cero);
 		}
 
+		//Zona que permite insertar un caballo blanco en el Tablero
+
 		if(mouseX >	 60 && mouseY > 500 && mouseX < 135 && mouseY < 575){
 			nueva = new Caballo(Color.BLANCO, cero);
 		}
+
+		//Zona que permite insertar un caballo negro en el Tablero
 
 		if(mouseX >	 160 && mouseY > 500 && mouseX < 235 && mouseY < 575){
 			nueva = new Caballo(Color.NEGRO, cero);
 		}
 
+		//Zona que permite insertar un peon blanco en el Tablero
+
 		if(mouseX >	 60 && mouseY > 600 && mouseX < 135 && mouseY < 675){
 			nueva = new Peon(Color.BLANCO, cero);
 		}
+
+		//Zona que permite insertar un peon negro en el Tablero
 
 		if(mouseX >	 160 && mouseY > 600 && mouseX < 235 && mouseY < 675){
 			nueva = new Peon(Color.NEGRO, cero);
 		}
 
-		if(mouseX >	 60 && mouseY > 700 && mouseX < 135 && mouseY < 775){
+		//Zona que permite borrar una pieza del Tablero
+
+		if(mouseX >	 104 && mouseY > 700 && mouseX < 191 && mouseY < 775){
 			nueva = null;
 		}
 
-		if(mouseX >	 160 && mouseY > 700 && mouseX < 235 && mouseY < 775){
+		//Zona donde se quitan todas las piezas del tablero
+
+		if(mouseX > 1150 && mouseY > 150 && mouseX < 1350 && mouseY < 220 && !inicio){
 			for (int i = 0; i < 8; i ++){
 				for (int j = 3; j < 11; j ++){
 					try{
@@ -266,41 +337,37 @@ public class Main extends PApplet{
 			}
 		}
 
-		if(mouseX > 1150 && mouseY > 150 && mouseX < 1350 && mouseY < 220){
+		//Zona donde se guarda el tablero en un archivo
+
+		if(mouseX > 1150 && mouseY > 250 && mouseX < 1350 && mouseY < 320){
 			guardarPosicion();
 		}
 
-		if(mouseX > 1150 && mouseY > 250 && mouseX < 1350 && mouseY < 320){
+		//Zona donde se lee un archivo y se representa en el tablero
+
+		if(mouseX > 1150 && mouseY > 350 && mouseX < 1350 && mouseY < 420){
 			lecturaPosicion();
 		}
 		
+		//Zona donde se captura el tablero en una imagen
+
 		if(mouseX > 1150 && mouseY > 450 && mouseX < 1350 && mouseY < 520){
+			capturaPantalla();
+		}
+
+		//Zona donde se empieza la partida
+
+		if(mouseX > 1150 && mouseY > 550 && mouseX < 1350 && mouseY < 620){
 			inicio = true;
 		}
 		
-		if(mouseX > 1150 && mouseY > 550 && mouseX < 1350 && mouseY < 620){
+		//Zona donde se detiene la partida
+
+		if(mouseX > 1150 && mouseY > 650 && mouseX < 1350 && mouseY < 720){
 			inicio = false;
 		}
 
-		
-		if(mouseX > 1150 && mouseY > 350 && mouseX < 1350 && mouseY < 420){
-			JFileChooser guardar = new JFileChooser();
-			guardar.showSaveDialog(null);
-			guardar.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-			//PImage captura = get(400, 0, 100, 100);
-			PImage captura2 = get(300, 0, 800, 800);
-			Image buena2 = captura2.getImage();	
-			//Image buena = captura.getImage();	
-			try {
-				File archivo = new File(guardar.getSelectedFile().getAbsolutePath());
-				BufferedImage imagen = new BufferedImage(800, 800,BufferedImage.TYPE_INT_RGB);
-				Graphics lienzo = imagen.getGraphics();
-				//lienzo.drawImage(buena, 0, 0, null);
-				lienzo.drawImage(buena2, 0, 0, null);
-				//save(guardar.getSelectedFile().getAbsolutePath() + ".png");
-				ImageIO.write(imagen, "jpg", archivo);
-			} catch (IOException e) {}
-		}
+		//Zona donde se controla el tablero
 
 		if(mouseX > 300 && mouseY > 0 && mouseX < 1100 && mouseY < 800){
 			int fila = event.getY() / 100;
@@ -329,6 +396,10 @@ public class Main extends PApplet{
 		redraw();
 	}
 
+	/**
+	 * Metodo que guarda la Posicion del Tablero en un archivo txt
+	 * en la parte asignada por el Usuario
+	 */
 	public void guardarPosicion(){
 		JFileChooser guardar = new JFileChooser();
 		guardar.showSaveDialog(null);
@@ -359,6 +430,10 @@ public class Main extends PApplet{
 		}
 	}
 
+	/**
+	 * Metodo que lee un arhivo txt con una Posicon valida, y la 
+	 * dibuja en el Tablero del programa
+	 */
 	public void lecturaPosicion(){
 		JFileChooser leer = new JFileChooser();
 		leer.showOpenDialog(null);
@@ -383,6 +458,28 @@ public class Main extends PApplet{
 		}
 	}
 
+	/**
+	 * Metodo que captura el Tablero en una imagen png
+	 */
+	public void capturaPantalla(){
+		JFileChooser guardar = new JFileChooser();
+			guardar.showSaveDialog(null);
+			guardar.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+			PImage captura = get(300, 0, 800, 800);
+			Image image = captura.getImage();		
+			try {
+				File archivo = new File(guardar.getSelectedFile().getAbsolutePath());
+				BufferedImage imagen = new BufferedImage(800, 800,BufferedImage.TYPE_INT_RGB);
+				Graphics lienzo = imagen.getGraphics();
+				lienzo.drawImage(image, 0, 0, null);
+				ImageIO.write(imagen, "jpg", archivo);
+			} catch (IOException e) {
+
+			} catch (NullPointerException e){}
+	}
+	/**
+	 * Metodo que identifica las Piezas y su Color con una letra
+	 */
 	public String identificador(Pieza pieza){
 		String id = "";
 		if((pieza.obtenerPosicion().obtenerColumna() + pieza.obtenerPosicion().obtenerFila()) % 2 == 0){
@@ -469,6 +566,9 @@ public class Main extends PApplet{
 		return id;
 	}
 
+	/**
+	 * Metodo que traduce un caracter a una Pieza con una Poscion y Color
+	 */
 	public Pieza traductor(char id){
 		Pieza traducida = null;
 		if(id == 'k'){

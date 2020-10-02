@@ -4,6 +4,13 @@ import java.util.List;
 import java.util.LinkedList;
 import ajedrez.Tablero;
 
+/**
+ * Clase Peon que extiende de la clase Pieza y modela el comportamiento
+ * de una Pieza(Peon)
+ * 
+ * @author Erick Martinez Piza
+ * @version 1.0
+ */
 public class Peon extends Pieza {
 
     public Peon(Color color, Posicion posicion) {
@@ -62,6 +69,7 @@ public class Peon extends Pieza {
         return jugadas;
     }
 
+    @Override
     public Pieza copia(){
         return new Peon(this.obtenerColor(), this.obtenerPosicion());
     }
