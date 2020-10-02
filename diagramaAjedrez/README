@@ -1,0 +1,54 @@
+Este esel instructivo del programa de la Tarea01.
+
+El programa empieza con la opción default de borrar una pieza,
+por lo que si se presiona sobre alguna pieza antes de presionar
+cualquier otro botón, la pieza seleccionada se borrará.
+
+El programa tiene 2 menús y el tablero de ajedrez en el centro
+
+ 1.El primer menú llamado "Piezas"(el menú de la izquierda) tiene
+   distribuido una serie de botones con imágenes de las piezas disponibles
+   en el ajedrez. Si se presiona en alguna de las piezas tendrá la opción
+   de insertar esa pieza seleccionada en cualquier parte del tablero,
+   incluso si hay una pieza en la casilla deseada. Y también tiene el botón
+   de borrar, que a la hora de seleccionar esta opción, se podrá quitar
+   cualquier pieza del tablero. Este menú se deshabilita a la hora de 
+   presionar el boton "Jugar Partida" y se vuelve a habilitar cuando se 
+   presiona "Parar Partida"
+
+ 2.El segundo menú llamado "Opciones"(el menpu de la derecha)tiene  
+   distribuido una serie de botones:
+     # Nueva Posición: Hará que todas las piezas que en ese momento estén
+       en el tablero se borren, es decir, deja el tablero limpio. Este
+       botón se deshabilita a la hora de presionar el boton "Jugar Partida" 
+       y se vuelve a habilitar cuando se presiona "Parar Partida"
+     # Guardar Posición: Hará que se guarde la posición actual en un archivo txt 
+       con el tipo de letra de Marroquín. Cuando se presione el botón, 
+       se desplegara una ventana donde se elegirá donde guardar el archivo 
+       y el nombre que se le dará.
+     # Leer Posción: Hará que se lea un archivo txt que contenga una posición
+       de ajedrez con la letra de Marroquín. Cuando se presione el botón, 
+       se desplegara una ventana donde se elegirá el archivo que se leera.
+     # Capturar Posición: Hará que se guarde la posición actual en formato de 
+       imágen. Cuando se presione el botón, se desplegara una ventana donde se elegirá 
+       donde guardar la imágen y el nombre que se le dará.
+     # Jugar Partida: Hará que empiece una partida con la posición actual, dando el 
+       turno a blancas(Hay una excepción, leer # Parar Partida). Solo funciona si
+       no hay una partida en curso, y deshabilitará el menú de "Piezas" y el botón de 
+       "Nueva Posición" mientrás el botón esté activado. (Sigue en proceso)
+     # Parar Partida: Parará la partida que se estaba jugando, guardando el turno, es decir,
+       si se paró cuando el turno era de negras, cuando se de "Jugar Partida" de nuevo, 
+       las negras tendrán el turno. Solo funciona si hay una partida en curso, y habilitará
+       de nuevo el menú de "Piezas" y el botón de "Nueva Partida".
+
+ 3.El tablero tiene dos modos:
+     $ Sin partida: Es cuando no se ha presionado el botón "Jugar Partida", o en su defecto,
+       se presionó el botón de "Parar partida". En este modo, solo se pueden poner y quitar piezas.
+     $ En partida: Es cuando esta activo el botón "Jugar Partida". En este modo, se estará jugando 
+       una partida, donde al seleccionar una pieza del color del turno, esta se resaltará en azul,
+       y sus jugadas legales se resaltarán con círculos rojos, donde al presionar alguno de estos
+       circulos, la pieza se moverá al lugar presionado. (Se sigue trabajando en este modo).
+
+El programa se ejecuta escribiendo en la terminal "gradle run" estando parado en la carpeta 
+"diagramaAjedrez", o si no se tiene instalado gradle, se puede ejecutar de la siguiente forma:
+
