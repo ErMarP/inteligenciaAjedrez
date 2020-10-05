@@ -31,6 +31,7 @@ public class Tablero{
     private class Casilla{
 
         private Pieza pieza;
+        private int color = 0;
 
         /**
          * Metodo que devuelve la Pieza de la Casilla
@@ -50,16 +51,18 @@ public class Tablero{
             this.pieza = pieza;
         }
 
-        /**
-         * Metodo que verifica si la Casilla no tiene 
-         * ninguna Pieza
-         * 
-         * @return boolean -- True si no hay Pieza en la Casilla
-         */
-        public boolean esVacio() {
-            return pieza == null;
+        public int obtenerColor(){
+            return color;
         }
 
+        /**
+         * Metodo que asigna el color la casilla
+         * 
+         * @return int -- Color de la casilla: 0 - sin color
+         */
+        public void asignarColor(int color){
+            this.color = color;
+        }
     }
 
     private static final Tablero INSTANCIA = new Tablero();
@@ -135,6 +138,38 @@ public class Tablero{
     }
 
     /**
+     * Metodo que devuelve el color de la casilla
+     * 
+     * @param i -- la fila de la Casilla
+     * @param j -- la columna de la Casilla
+     * 
+     * @return int -- el color de la casilla: 
+     */
+    public int obtenerColor(int i, int j){
+        return casillas[i][j].obtenerColor();
+    }
+    /**
+     * Metodo que obtiene el color de una Casilla
+     * 
+     * @param i -- la fila de la Casilla
+     * @param j -- la columna de la Casilla
+     * @param color -- el color de la casilla
+     * 
+     */
+    public void asignarColor(int i, int j, int color) {
+        casillas[i][j].asignarColor(color);
+    }
+
+    /**
+     * Metodo que obtiene el turno de la partida
+     * 
+     * @return Color -- el Color que tiene el turno siguiente
+     */
+    public Color obtenerTurno() {
+        return turno;
+    }
+
+    /**
      * Metodo que obtiene la Pieza de una Casilla
      * 
      * @param i -- la fila de la Casilla
@@ -145,15 +180,6 @@ public class Tablero{
      */
     public Pieza obtenerPieza(int i, int j) {
         return casillas[i][j].obtenerPieza();
-    }
-
-    /**
-     * Metodo que obtiene el turno de la partida
-     * 
-     * @return Color -- el Color que tiene el turno siguiente
-     */
-    public Color obtenerTurno() {
-        return turno;
     }
 
     /**

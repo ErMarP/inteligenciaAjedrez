@@ -30,11 +30,12 @@ public class Main extends PApplet{
     private Tablero tablero;
     private HashMap<String, PImage> imagenes;
     private Pieza piezaSeleccionada;
-	private boolean seleccionandoJugada;
-	private boolean fin = false;
-	private boolean inicio = false;
 	private Pieza nueva;
+	private boolean seleccionandoJugada;
+	private boolean dibujar = false;
+	private boolean inicio = false;
 	private Posicion cero;
+	private int a, b, c, d;
 	
 	/**
      * Metodo main que corre la Aplicacion
@@ -81,12 +82,12 @@ public class Main extends PApplet{
         imagenes.put("TorreBLANCO1", loadImage(getClass().getResource("/Tbb.jpg").getPath()));
         imagenes.put("TorreNEGRO1", loadImage(getClass().getResource("/Tnb.jpg").getPath()));
         imagenes.put("TorreBLANCO2", loadImage(getClass().getResource("/Tbn.jpg").getPath()));
-        imagenes.put("TorreNEGRO2", loadImage(getClass().getResource("/Tnn.jpg").getPath()));
+		imagenes.put("TorreNEGRO2", loadImage(getClass().getResource("/Tnn.jpg").getPath()));
     }
 
     @Override
 	public void draw() {
-
+		cursor(ARROW);
 		//Espacio que especifica el color del fondo
 
 		background(0xff804800);
@@ -163,12 +164,14 @@ public class Main extends PApplet{
 			for (int j = 0; j < 2; j ++){
 				if(j == 0){
 					if(mouseX >	 60 && mouseY > i && mouseX < 135 && mouseY < i + 75){
+						cursor(HAND);
 						strokeWeight(6);
 						fill(0, 100);
 						rect(60, i, 75, 75);
 					}
 				 }else{
 					if(mouseX >	 160 && mouseY > i && mouseX < 235 && mouseY < i + 75){
+						cursor(HAND);
 						strokeWeight(6);
 						fill(0, 100);
 						rect(160, i, 75, 75);
@@ -180,6 +183,7 @@ public class Main extends PApplet{
 		//Espacio donde se crea el efecto del boton del boton de "borrar"
 
 		if(mouseX >	 104 && mouseY > 700 && mouseX < 191 && mouseY < 775){
+			cursor(HAND);
 			strokeWeight(6);
 			fill(0, 100);
 			rect(104, 700, 87, 75);
@@ -189,6 +193,7 @@ public class Main extends PApplet{
 		
 		for (int i = 150; i < 700; i += 100){
 			if(mouseX >	 1150 && mouseY > i && mouseX < 1350 && mouseY < i + 70){
+				cursor(HAND);
 				strokeWeight(6);
 				fill(100, 100);
 				rect(1150, i, 200, 70);
@@ -217,9 +222,20 @@ public class Main extends PApplet{
 				Pieza pieza = tablero.obtenerPieza(i, j);
 				if (pieza != null) {
 					 image(imagenes.get(pieza.getClass().getSimpleName() + pieza.obtenerColor() + ((i + j)%2 == 0 ? 1 : 2)),
-						  j * (height / 8), i * (height / 8), 
-						  height / 8, height / 8);
+						  j * 100, i * 100, 100, 100);
 				}
+			}
+		}
+
+		//Espacio donde se colorean las casillas del color seleccionado
+
+		for (int i = 0; i < 8; i++) {
+			for (int j = 3; j < 11; j++) {	
+				if(tablero.obtenerColor(i, j) == 1){
+					strokeWeight(0);
+					fill(0x50AD329F);
+					rect(j * 100, i * 100, 100, 100);
+				}	
 			}
 		}
 
@@ -242,158 +258,204 @@ public class Main extends PApplet{
 			stroke(0);
 			strokeWeight(1);
 		}
+
+		if(dibujar){
+			if(a != c || b != d){
+				stroke(0x80AD329F);
+				strokeWeight(9);
+				line(b, a, d, c);
+				stroke(0);
+				strokeWeight(1);
+			}
+		}
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent event){
+		if(mouseButton == LEFT) {
+			//Zona que permite insertar un rey blanco en el Tablero
 
-		//Zona que permite insertar un rey blanco en el Tablero
+			if(mouseX >	 60 && mouseY > 100 && mouseX < 135 && mouseY < 175){
+				nueva = new Rey(Color.BLANCO, cero);
+			}
 
-		if(mouseX >	 60 && mouseY > 100 && mouseX < 135 && mouseY < 175){
-			nueva = new Rey(Color.BLANCO, cero);
-		}
+			//Zona que permite insertar un rey negro en el Tablero
 
-		//Zona que permite insertar un rey negro en el Tablero
+			if(mouseX >	 160 && mouseY > 100 && mouseX < 235 && mouseY < 175){
+				nueva = new Rey(Color.NEGRO, cero);
+			}
 
-		if(mouseX >	 160 && mouseY > 100 && mouseX < 235 && mouseY < 175){
-			nueva = new Rey(Color.NEGRO, cero);
-		}
+			//Zona que permite insertar una dama blanca en el Tablero
 
-		//Zona que permite insertar una dama blanca en el Tablero
+			if(mouseX >	 60 && mouseY > 200 && mouseX < 135 && mouseY < 275){
+				nueva = new Dama(Color.BLANCO, cero);
+			}
 
-		if(mouseX >	 60 && mouseY > 200 && mouseX < 135 && mouseY < 275){
-			nueva = new Dama(Color.BLANCO, cero);
-		}
+			//Zona que permite insertar una dama negra en el Tablero
 
-		//Zona que permite insertar una dama negra en el Tablero
+			if(mouseX >	 160 && mouseY > 200 && mouseX < 235 && mouseY < 275){
+				nueva = new Dama(Color.NEGRO, cero);
+			}
 
-		if(mouseX >	 160 && mouseY > 200 && mouseX < 235 && mouseY < 275){
-			nueva = new Dama(Color.NEGRO, cero);
-		}
+			//Zona que permite insertar una torre blanca en el Tablero
 
-		//Zona que permite insertar una torre blanca en el Tablero
+			if(mouseX >	 60 && mouseY > 300 && mouseX < 135 && mouseY < 375){
+				nueva = new Torre(Color.BLANCO, cero);
+			}
 
-		if(mouseX >	 60 && mouseY > 300 && mouseX < 135 && mouseY < 375){
-			nueva = new Torre(Color.BLANCO, cero);
-		}
+			//Zona que permite insertar una torre negra en el Tablero
 
-		//Zona que permite insertar una torre negra en el Tablero
+			if(mouseX >	 160 && mouseY > 300 && mouseX < 235 && mouseY < 375){
+				nueva = new Torre(Color.NEGRO, cero);
+			}
 
-		if(mouseX >	 160 && mouseY > 300 && mouseX < 235 && mouseY < 375){
-			nueva = new Torre(Color.NEGRO, cero);
-		}
+			//Zona que permite insertar un alfil blanco en el Tablero
 
-		//Zona que permite insertar un alfil blanco en el Tablero
+			if(mouseX >	 60 && mouseY > 400 && mouseX < 135 && mouseY < 475){
+				nueva = new Alfil(Color.BLANCO, cero);
+			}
 
-		if(mouseX >	 60 && mouseY > 400 && mouseX < 135 && mouseY < 475){
-			nueva = new Alfil(Color.BLANCO, cero);
-		}
+			//Zona que permite insertar un alfil negro en el Tablero
 
-		//Zona que permite insertar un alfil negro en el Tablero
+			if(mouseX >	 160 && mouseY > 400 && mouseX < 235 && mouseY < 475){
+				nueva = new Alfil(Color.NEGRO, cero);
+			}
 
-		if(mouseX >	 160 && mouseY > 400 && mouseX < 235 && mouseY < 475){
-			nueva = new Alfil(Color.NEGRO, cero);
-		}
+			//Zona que permite insertar un caballo blanco en el Tablero
 
-		//Zona que permite insertar un caballo blanco en el Tablero
+			if(mouseX >	 60 && mouseY > 500 && mouseX < 135 && mouseY < 575){
+				nueva = new Caballo(Color.BLANCO, cero);
+			}
 
-		if(mouseX >	 60 && mouseY > 500 && mouseX < 135 && mouseY < 575){
-			nueva = new Caballo(Color.BLANCO, cero);
-		}
+			//Zona que permite insertar un caballo negro en el Tablero
 
-		//Zona que permite insertar un caballo negro en el Tablero
+			if(mouseX >	 160 && mouseY > 500 && mouseX < 235 && mouseY < 575){
+				nueva = new Caballo(Color.NEGRO, cero);
+			}
 
-		if(mouseX >	 160 && mouseY > 500 && mouseX < 235 && mouseY < 575){
-			nueva = new Caballo(Color.NEGRO, cero);
-		}
+			//Zona que permite insertar un peon blanco en el Tablero
 
-		//Zona que permite insertar un peon blanco en el Tablero
+			if(mouseX >	 60 && mouseY > 600 && mouseX < 135 && mouseY < 675){
+				nueva = new Peon(Color.BLANCO, cero);
+			}
 
-		if(mouseX >	 60 && mouseY > 600 && mouseX < 135 && mouseY < 675){
-			nueva = new Peon(Color.BLANCO, cero);
-		}
+			//Zona que permite insertar un peon negro en el Tablero
 
-		//Zona que permite insertar un peon negro en el Tablero
+			if(mouseX >	 160 && mouseY > 600 && mouseX < 235 && mouseY < 675){
+				nueva = new Peon(Color.NEGRO, cero);
+			}
 
-		if(mouseX >	 160 && mouseY > 600 && mouseX < 235 && mouseY < 675){
-			nueva = new Peon(Color.NEGRO, cero);
-		}
+			//Zona que permite borrar una pieza del Tablero
 
-		//Zona que permite borrar una pieza del Tablero
+			if(mouseX >	 104 && mouseY > 700 && mouseX < 191 && mouseY < 775){
+				nueva = null;
+			}
 
-		if(mouseX >	 104 && mouseY > 700 && mouseX < 191 && mouseY < 775){
-			nueva = null;
-		}
+			//Zona donde se quitan todas las piezas del tablero
 
-		//Zona donde se quitan todas las piezas del tablero
+			if(mouseX > 1150 && mouseY > 150 && mouseX < 1350 && mouseY < 220 && !inicio){
+				for (int i = 0; i < 8; i ++){
+					for (int j = 3; j < 11; j ++){
+						try{
+							tablero.asignarPieza(null, i, j);
+						}catch(Exception e){}
+					}
+				}
+			}
 
-		if(mouseX > 1150 && mouseY > 150 && mouseX < 1350 && mouseY < 220 && !inicio){
-			for (int i = 0; i < 8; i ++){
-				for (int j = 3; j < 11; j ++){
+			//Zona donde se guarda el tablero en un archivo
+
+			if(mouseX > 1150 && mouseY > 250 && mouseX < 1350 && mouseY < 320){
+				guardarPosicion();
+			}
+
+			//Zona donde se lee un archivo y se representa en el tablero
+
+			if(mouseX > 1150 && mouseY > 350 && mouseX < 1350 && mouseY < 420){
+				lecturaPosicion();
+			}
+		
+			//Zona donde se captura el tablero en una imagen
+
+			if(mouseX > 1150 && mouseY > 450 && mouseX < 1350 && mouseY < 520){
+				capturaPantalla();
+			}
+
+			//Zona donde se empieza la partida
+
+			if(mouseX > 1150 && mouseY > 550 && mouseX < 1350 && mouseY < 620){
+				inicio = true;
+			}
+		
+			//Zona donde se detiene la partida
+
+			if(mouseX > 1150 && mouseY > 650 && mouseX < 1350 && mouseY < 720){
+				inicio = false;
+			}
+
+			//Zona donde se controla el tablero
+
+			if(mouseX > 300 && mouseY > 0 && mouseX < 1100 && mouseY < 800){
+				int fila = event.getY() / 100;
+    			int columna = event.getX() / 100;	
+				if(!inicio){
 					try{
-						tablero.asignarPieza(null, i, j);
+						tablero.asignarPieza(null, fila, columna);
+						tablero.asignarPieza(nueva.copia(), fila, columna);
 					}catch(Exception e){}
 				}
-			}
-		}
 
-		//Zona donde se guarda el tablero en un archivo
-
-		if(mouseX > 1150 && mouseY > 250 && mouseX < 1350 && mouseY < 320){
-			guardarPosicion();
-		}
-
-		//Zona donde se lee un archivo y se representa en el tablero
-
-		if(mouseX > 1150 && mouseY > 350 && mouseX < 1350 && mouseY < 420){
-			lecturaPosicion();
-		}
-		
-		//Zona donde se captura el tablero en una imagen
-
-		if(mouseX > 1150 && mouseY > 450 && mouseX < 1350 && mouseY < 520){
-			capturaPantalla();
-		}
-
-		//Zona donde se empieza la partida
-
-		if(mouseX > 1150 && mouseY > 550 && mouseX < 1350 && mouseY < 620){
-			inicio = true;
-		}
-		
-		//Zona donde se detiene la partida
-
-		if(mouseX > 1150 && mouseY > 650 && mouseX < 1350 && mouseY < 720){
-			inicio = false;
-		}
-
-		//Zona donde se controla el tablero
-
-		if(mouseX > 300 && mouseY > 0 && mouseX < 1100 && mouseY < 800){
-			int fila = event.getY() / 100;
-    		int columna = event.getX() / 100;	
-			if(!inicio){
-				try{
-					tablero.asignarPieza(null, fila, columna);
-					tablero.asignarPieza(nueva.copia(), fila, columna);
-				}catch(Exception e){}
-			}
-
-			if(inicio){
-				if (seleccionandoJugada) {
-					tablero.moverPieza(piezaSeleccionada, fila, columna);
-					seleccionandoJugada = false;
-					piezaSeleccionada = null;
-				} else {
-					piezaSeleccionada = tablero.obtenerPieza(fila, columna);
-					if (piezaSeleccionada == null || tablero.obtenerTurno() != piezaSeleccionada.obtenerColor()) {
+				if(inicio){
+					if (seleccionandoJugada) {
+						tablero.moverPieza(piezaSeleccionada, fila, columna);
+						seleccionandoJugada = false;
 						piezaSeleccionada = null;
+					} else {
+						piezaSeleccionada = tablero.obtenerPieza(fila, columna);
+						if (piezaSeleccionada == null || tablero.obtenerTurno() != piezaSeleccionada.obtenerColor()) {
+							piezaSeleccionada = null;
+						}
+						seleccionandoJugada = piezaSeleccionada != null;
 					}
-					seleccionandoJugada = piezaSeleccionada != null;
 				}
 			}
+		}else if(mouseButton == RIGHT){
+
+			//Zona donde se cambia el color a una casilla
+			
+			if(mouseX > 300 && mouseY > 0 && mouseX < 1100 && mouseY < 800){
+				int fila = event.getY() / 100;
+				int columna = event.getX() / 100;
+				tablero.asignarColor(fila, columna, 1);
+				
+			}
 		}
-		redraw();
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent event){
+		if(mouseButton == RIGHT){
+			dibujar = false;
+			int fila = event.getY() / 100;
+			int columna = event.getX() / 100;
+			a = (fila * 100) + 50;
+			b = (columna * 100) + 50;
+		}
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent event){
+		if(mouseButton == RIGHT){
+
+			if(mouseX > 300 && mouseY > 0 && mouseX < 1100 && mouseY < 800){
+				int fila = event.getY() / 100;
+				int columna = event.getX() / 100;
+				c = (fila * 100) + 50;
+				d = (columna * 100) + 50;
+				dibujar = true;
+			}
+		}
 	}
 
 	/**
