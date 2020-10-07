@@ -11,6 +11,7 @@ import ajedrez.piezas.Torre;
 import ajedrez.piezas.Rey;
 import ajedrez.piezas.Alfil;
 import ajedrez.piezas.Caballo;
+import ajedrez.Casilla;
 
 /**
  * Clase Tablero que modela el comportamiento de un 
@@ -20,50 +21,6 @@ import ajedrez.piezas.Caballo;
  * @version 1.0
  */
 public class Tablero{
-
-    /**
-     * Clase Casilla que modela el comportamiento de cada
-     * Casilla del Tablero 
-     * 
-     * @author Erick Martinez Piza
-     * @version 1.0
-     */
-    private class Casilla{
-
-        private Pieza pieza;
-        private int color = 0;
-
-        /**
-         * Metodo que devuelve la Pieza de la Casilla
-         * 
-         * @return Pieza -- Pieza en la casilla 
-         */
-        public Pieza obtenerPieza() {
-            return pieza;
-        }
-
-        /**
-         * Metodo que asigna una Pieza a una Casilla
-         * 
-         * @param pieza -- la pieza que se va a asignar
-         */
-        public void asignarPieza(Pieza pieza) {
-            this.pieza = pieza;
-        }
-
-        public int obtenerColor(){
-            return color;
-        }
-
-        /**
-         * Metodo que asigna el color la casilla
-         * 
-         * @return int -- Color de la casilla: 0 - sin color
-         */
-        public void asignarColor(int color){
-            this.color = color;
-        }
-    }
 
     private static final Tablero INSTANCIA = new Tablero();
 
@@ -82,7 +39,7 @@ public class Tablero{
         turno = Color.BLANCO;
         for (int i = 0; i < 8; i++) {
             for (int j = 3; j < 11; j++) {
-                casillas[i][j] = new Casilla();
+                casillas[i][j] = new Casilla(i, j);
                 if (i >= 2 && i <= 5) continue; // Casillas vacías
                 
                 Posicion posicion = new Posicion(i, j);
@@ -149,7 +106,7 @@ public class Tablero{
         return casillas[i][j].obtenerColor();
     }
     /**
-     * Metodo que obtiene el color de una Casilla
+     * Metodo que asigna el color de una Casilla
      * 
      * @param i -- la fila de la Casilla
      * @param j -- la columna de la Casilla
@@ -161,12 +118,47 @@ public class Tablero{
     }
 
     /**
+     * Metodo que devuelve la lista de la casillas con flecha
+     * 
+     * @param i -- la fila de la Casilla
+     * @param j -- la columna de la Casilla
+     * 
+     * @return LinkedList<Casilla> -- la lista de las casilla: 
+     */
+    public LinkedList<Casilla> obtenerFlecha(int i, int j){
+        return casillas[i][j].obtenerFlecha();
+    }
+    /**
+     * Metodo que asigna una casilla a la lista de flechas
+     * 
+     * @param i -- la fila de la Casilla
+     * @param j -- la columna de la Casilla
+     * @param fin -- la casilla a asignar
+     * 
+     */
+    public void asignarFlecha(int i, int j, Casilla fin) {
+        casillas[i][j].asignarFlecha(fin);
+    }
+
+    /**
      * Metodo que obtiene el turno de la partida
      * 
      * @return Color -- el Color que tiene el turno siguiente
      */
     public Color obtenerTurno() {
         return turno;
+    }
+
+    /**
+     * Metodo para obtener la casilla del tablero
+     * 
+     * @param i -- la fila de la Casilla
+     * @param j -- la columna de la Casilla
+     * 
+     * @return Casilla -- la casilla que se solicitó
+     */
+    public Casilla obtenerCasilla(int i, int j){
+        return casillas[i][j];
     }
 
     /**

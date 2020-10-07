@@ -15,6 +15,7 @@ import processing.core.PApplet;
 import processing.core.PImage;
 import processing.event.MouseEvent;
 import ajedrez.Tablero;
+import ajedrez.Casilla;
 import ajedrez.piezas.*;
 import jdk.jfr.Event;
 
@@ -36,6 +37,7 @@ public class Main extends PApplet{
 	private boolean inicio = false;
 	private Posicion cero;
 	private int a, b, c, d;
+	private int color = 1;
 	
 	/**
      * Metodo main que corre la Aplicacion
@@ -233,9 +235,36 @@ public class Main extends PApplet{
 			for (int j = 3; j < 11; j++) {	
 				if(tablero.obtenerColor(i, j) == 1){
 					strokeWeight(0);
-					fill(0x50AD329F);
+					fill(0x50dd2424);
 					rect(j * 100, i * 100, 100, 100);
-				}	
+				}		
+				if(tablero.obtenerColor(i, j) == 2){
+					strokeWeight(0);
+					fill(0x505bc615);
+					rect(j * 100, i * 100, 100, 100);
+				}
+				if(tablero.obtenerColor(i, j) == 3){
+					strokeWeight(0);
+					fill(0x5016b0c6);
+					rect(j * 100, i * 100, 100, 100);
+				}
+			}
+		}
+
+		//Espacio donde se crean las flechas
+
+		for (int i = 0; i < 8; i ++){
+			for (int j = 3; j < 11; j ++){
+				if(!tablero.obtenerFlecha(i, j).isEmpty()){
+						for(Casilla f : tablero.obtenerFlecha(i, j)){
+						stroke(0xffdd2424);
+						strokeWeight(15);
+						line((j * 100) + 50, (i * 100) + 50, (f.obtenerPosicion().obtenerColumna() * 100) + 50 , 
+							(f.obtenerPosicion().obtenerFila() * 100) + 50);
+						stroke(0);
+						strokeWeight(1);
+					}
+				}
 			}
 		}
 
@@ -259,15 +288,17 @@ public class Main extends PApplet{
 			strokeWeight(1);
 		}
 
-		if(dibujar){
+		/*if(dibujar){
 			if(a != c || b != d){
-				stroke(0x80AD329F);
-				strokeWeight(9);
+				stroke(0xffdd2424);
+				strokeWeight(15);
 				line(b, a, d, c);
+				fill(0xffdd2424);
+				triangle(d, c, d, c, d, c);
 				stroke(0);
 				strokeWeight(1);
 			}
-		}
+		}*/
 	}
 
 	@Override
@@ -426,8 +457,11 @@ public class Main extends PApplet{
 			if(mouseX > 300 && mouseY > 0 && mouseX < 1100 && mouseY < 800){
 				int fila = event.getY() / 100;
 				int columna = event.getX() / 100;
-				tablero.asignarColor(fila, columna, 1);
-				
+				if(tablero.obtenerColor(fila, columna) == color){
+					tablero.asignarColor(fila, columna, 0);
+				}else{
+					tablero.asignarColor(fila, columna, color);	
+				}			
 			}
 		}
 		
@@ -436,12 +470,23 @@ public class Main extends PApplet{
 	@Override
 	public void mousePressed(MouseEvent event){
 		if(mouseButton == RIGHT){
-			dibujar = false;
 			int fila = event.getY() / 100;
 			int columna = event.getX() / 100;
-			a = (fila * 100) + 50;
-			b = (columna * 100) + 50;
+			a = fila;
+			b = columna;
 		}
+	}
+
+	@Override
+	public void keyPressed(){
+		if(key == 'b')
+			color = 0;	
+		if(key == 'r')
+			color = 1;
+		if(key == 'v')
+			color = 2;
+		if(key == 'a')
+			color = 3;
 	}
 
 	@Override
@@ -451,9 +496,14 @@ public class Main extends PApplet{
 			if(mouseX > 300 && mouseY > 0 && mouseX < 1100 && mouseY < 800){
 				int fila = event.getY() / 100;
 				int columna = event.getX() / 100;
-				c = (fila * 100) + 50;
-				d = (columna * 100) + 50;
-				dibujar = true;
+				if(a != fila || b != columna){
+					if(tablero.obtenerFlecha(a, b).contains(tablero.obtenerCasilla(fila, columna))){
+						int remover = tablero.obtenerFlecha(a, b).lastIndexOf(tablero.obtenerCasilla(fila, columna));
+						tablero.obtenerFlecha(a, b).remove(remover);
+					}else{
+						tablero.asignarFlecha(a, b, tablero.obtenerCasilla(fila, columna));
+					}
+				}
 			}
 		}
 	}
