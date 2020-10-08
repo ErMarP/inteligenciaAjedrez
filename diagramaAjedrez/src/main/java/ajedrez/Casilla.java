@@ -14,6 +14,7 @@ public class Casilla{
 
     private Pieza pieza;
     private int color;
+    private int colorFlecha; 
     private LinkedList<Casilla> flechas;
     private Posicion pos;
 
@@ -26,6 +27,7 @@ public class Casilla{
     public Casilla(int i, int j){
         pieza = null;
         color = 0;
+        colorFlecha = 0;
         flechas = new java.util.LinkedList<>();;
         pos = new Posicion(i, j);
     }
@@ -74,6 +76,25 @@ public class Casilla{
     public void asignarColor(int color){
         this.color = color;
     }
+
+    /**
+     * Metodo para obtener el color de la flecha de la casilla
+     * 
+     * @return int -- el color de la casilla
+     */
+    public int obtenerColorFlecha(){
+        return colorFlecha;
+    }
+
+    /**
+     * Metodo que asigna el color de la flecha a la casilla
+     * 
+     * @return int -- Color de la casilla: 0 - sin color
+     */
+    public void asignarColorFlecha(int color){
+        this.colorFlecha = color;
+    }
+
 
     /**
      * Metodo que regresa la lista de casillas asignadas con flecha

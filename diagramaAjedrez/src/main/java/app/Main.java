@@ -235,17 +235,17 @@ public class Main extends PApplet{
 			for (int j = 3; j < 11; j++) {	
 				if(tablero.obtenerColor(i, j) == 1){
 					strokeWeight(0);
-					fill(0x50dd2424);
+					fill(0x80dd2424);
 					rect(j * 100, i * 100, 100, 100);
 				}		
 				if(tablero.obtenerColor(i, j) == 2){
 					strokeWeight(0);
-					fill(0x505bc615);
+					fill(0x805bc615);
 					rect(j * 100, i * 100, 100, 100);
 				}
 				if(tablero.obtenerColor(i, j) == 3){
 					strokeWeight(0);
-					fill(0x5016b0c6);
+					fill(0x8016b0c6);
 					rect(j * 100, i * 100, 100, 100);
 				}
 			}
@@ -257,12 +257,17 @@ public class Main extends PApplet{
 			for (int j = 3; j < 11; j ++){
 				if(!tablero.obtenerFlecha(i, j).isEmpty()){
 						for(Casilla f : tablero.obtenerFlecha(i, j)){
-						stroke(0xffdd2424);
-						strokeWeight(15);
-						line((j * 100) + 50, (i * 100) + 50, (f.obtenerPosicion().obtenerColumna() * 100) + 50 , 
-							(f.obtenerPosicion().obtenerFila() * 100) + 50);
-						stroke(0);
-						strokeWeight(1);
+							int fila = (f.obtenerPosicion().obtenerFila() * 100) + 50,
+								columna = (f.obtenerPosicion().obtenerColumna() * 100) + 50;
+							if(tablero.obtenerCasilla(i, j).obtenerColorFlecha() == 1){
+								flecha((j * 100) + 50, (i * 100) + 50, columna, fila, 0xffdd2424);
+							}
+							if(tablero.obtenerCasilla(i, j).obtenerColorFlecha() == 2){
+								flecha((j * 100) + 50, (i * 100) + 50, columna, fila, 0xff5bc615);
+							}
+							if(tablero.obtenerCasilla(i, j).obtenerColorFlecha() == 3){
+								flecha((j * 100) + 50, (i * 100) + 50, columna, fila, 0xff16b0c6);
+							}
 					}
 				}
 			}
@@ -479,13 +484,13 @@ public class Main extends PApplet{
 
 	@Override
 	public void keyPressed(){
-		if(key == 'b')
+		if(key == 'b' || key == 'B')
 			color = 0;	
-		if(key == 'r')
+		if(key == 'r' || key == 'R')
 			color = 1;
-		if(key == 'v')
+		if(key == 'v' || key == 'V')
 			color = 2;
-		if(key == 'a')
+		if(key == 'a' || key == 'A')
 			color = 3;
 	}
 
@@ -502,6 +507,7 @@ public class Main extends PApplet{
 						tablero.obtenerFlecha(a, b).remove(remover);
 					}else{
 						tablero.asignarFlecha(a, b, tablero.obtenerCasilla(fila, columna));
+						tablero.obtenerCasilla(a, b).asignarColorFlecha(color);
 					}
 				}
 			}
@@ -569,6 +575,27 @@ public class Main extends PApplet{
     		System.out.println("Error al leer");
 		}
 	}
+
+	public void flecha(int x0,int y0,int x1,int y1, int color){
+		double alfa = Math.atan2(y1 - y0, x1 - x0);
+		stroke(color);
+		strokeWeight(15);
+		line(x0, y0, x1, y1);
+		int k = 15;
+		int xa =(int)(x1 - (k * Math.cos(alfa+1)));
+		int ya =(int)(y1 - (k * Math.sin(alfa+1)));
+		// Se dibuja un extremo de la dirección de la flecha.
+		int xb =(int)(x1 - (k * Math.cos(alfa-1)));
+		int yb =(int)(y1 - (k * Math.sin(alfa-1)));
+		// Se dibuja el otro extremo de la dirección de la flecha.
+		fill(color);
+		triangle(x1, y1, xa, ya, xb, yb);
+		//line(xa, ya, x1, y1);
+		//line(xb, yb, x1, y1);
+		//line(xb, yb, xa, ya);
+		stroke(0);
+		strokeWeight(1);
+		}
 
 	/**
 	 * Metodo que captura el Tablero en una imagen png
