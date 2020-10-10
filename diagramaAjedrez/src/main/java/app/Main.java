@@ -454,6 +454,13 @@ public class Main extends PApplet{
 						seleccionandoJugada = piezaSeleccionada != null;
 					}
 				}
+
+				for (int i = 0; i < 8; i ++){
+					for (int j = 3; j < 11; j ++){
+						tablero.asignarColor(i, j, 0);
+						tablero.borrarFlechas(i, j);
+					}
+				}
 			}
 		}else if(mouseButton == RIGHT){
 

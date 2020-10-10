@@ -95,7 +95,12 @@ public class Casilla{
         this.colorFlecha = color;
     }
 
-
+    /**
+     * Metodo que borra lo que haya en la lista de flechas
+     */
+    public void reiniciarFlecha(){
+        this.flechas.clear();
+    }
     /**
      * Metodo que regresa la lista de casillas asignadas con flecha
      * 

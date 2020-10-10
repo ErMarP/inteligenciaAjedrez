@@ -141,6 +141,16 @@ public class Tablero{
     }
 
     /**
+     * Metodo que borra las flechas de una casilla
+     * 
+     * @param i -- la fila de la Casilla
+     * @param j -- la columna de la Casilla
+     */
+    public void borrarFlechas(int i, int j){
+        casillas[i][j].reiniciarFlecha();
+    }
+
+    /**
      * Metodo que obtiene el turno de la partida
      * 
      * @return Color -- el Color que tiene el turno siguiente
